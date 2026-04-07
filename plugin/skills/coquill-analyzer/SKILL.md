@@ -27,7 +27,7 @@ python <script_path> <template_dir> [--force]
 
 Pass `--force` if the Orchestrator requests re-analysis (skips the cache check).
 
-The script handles: format detection, caching, text extraction (including docx XML merge), two-pass analysis, type inference, condition parsing, loop sub-variable extraction, dependency graph construction, config.yaml merge, and manifest save.
+The script handles: format detection, caching, text extraction (including docx XML merge), two-pass analysis, type inference, condition parsing, loop sub-variable extraction, dependency graph construction, config.yaml merge, and manifest save. For implementation details, see `scripts/analyze.py`.
 
 ### Interpret Script Output
 

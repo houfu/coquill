@@ -70,8 +70,8 @@ Do NOT attempt `docx2pdf` or `soffice` in Cowork — they fail due to sandbox re
 The script's JSON output includes a `validation` object:
 
 - **`validation.passed == true`**: All placeholders and control tags were processed. The document is ready.
-- **`validation.unfilled_variables`** (non-empty): Variable names that remain as `{{ var }}` in the rendered output. Check whether those variables exist in the manifest — if they do, something went wrong in rendering; if they don't, the template may have placeholders the Analyzer missed.
-- **`validation.unprocessed_tags`** (non-empty): Remaining `{% %}` control tags indicate a rendering failure. Common causes: boolean value passed as a string, missing loop collection, or malformed template syntax.
+- **`validation.unfilled_variables`** (non-empty): Variable names that remain as `{{ var }}` in the output — cross-check against the manifest to determine if it is a rendering bug or an Analyzer gap.
+- **`validation.unprocessed_tags`** (non-empty): Remaining `{% %}` control tags — likely a boolean passed as a string, missing loop collection, or malformed template syntax.
 
 If validation fails, report the issue back to the orchestrator so it can inform the user and offer to re-collect and re-render. Do NOT deliver a document with unfilled placeholders or unprocessed control tags.
 
@@ -87,4 +87,4 @@ Return to the orchestrator:
 ## Important Notes
 
 - **For docx templates**, always use `docxtpl` — not raw python-docx with string replacement. `docxtpl` preserves formatting around placeholders and natively supports Jinja2 control tags.
-- **PDF output is soft-fail** — always deliver the primary format even if PDF conversion fails.
+- For render script internals (boolean coercion, job folder naming, template engine selection), see `scripts/render.py`.

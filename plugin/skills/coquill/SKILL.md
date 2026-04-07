@@ -90,23 +90,9 @@ Initialize the log with one entry:
 `2026-03-01T12:03:00+08:00`). For `question` entries, timestamp is when Claude sent the
 question; for `answer` entries, when the user's response was received.
 
-Entry types appended during Phases 4 and 5:
-  prefill           — variables extracted from opening message (list of {name, label, value})
-  group_start       — begins a named group (branch: "if"/"else"/"skipped" for conditionals)
-  question          — effective question(s) asked in one turn; include `questions` (array of variable names asked about)
-  clarification     — substantive user question + Claude's response (user_question, claude_response)
-  answer            — effective final answer, near-verbatim
-  validation_retry  — re-ask after failed validation (reason)
-  skip              — variable/group skipped, with human-readable reason
-  loop_item         — confirmed loop item (item_index, question, answer, values dict)
-  correction        — Phase 5 edit (field, label, old_value, new_value, optional note)
+Entry types appended during Phases 4 and 5: `prefill` (variables from opening message), `group_start` (named group, with branch for conditionals), `question` (questions array), `clarification` (user_question + claude_response), `answer` (near-verbatim), `validation_retry` (reason), `skip` (reason), `loop_item` (item_index, question, answer, values), `correction` (field, label, old_value, new_value).
 
-Entry type appended when a skill or script is invoked:
-  tool_use          — records a skill/script invocation:
-                        tool: skill or script name (e.g. "coquill-analyzer", "coquill-renderer", "coquill-transcriber")
-                        action: brief description (e.g. "Parsed template and generated manifest")
-                        timestamp: when invoked (ISO 8601)
-                        completed_at: when finished (ISO 8601)
+`tool_use` entries record skill/script invocations: `tool`, `action`, `timestamp`, `completed_at`.
 
 This log is scoped to ONE document assembly. Reset it at the start of Phase 3d whenever
 you begin preparing a new document.

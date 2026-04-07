@@ -25,9 +25,17 @@ transcript of every micro-turn. When a user answered multiple questions at once,
 records the net result. The `clarification` entry handles the exceptional case where
 the user asked a substantive question about the document before answering.
 
+## Pre-flight Check
+
+Before invoking the script, verify the required input files exist:
+- `interview_log.json` at the provided `interview_log_path`
+- `manifest.yaml` at the provided `manifest_path`
+
+If either is missing, report the error to the Orchestrator immediately — do not invoke the script.
+
 ## Run the Script
 
-Resolve the script path relative to the project root and invoke it:
+Resolve the script path: use `$CLAUDE_PLUGIN_ROOT/scripts/transcribe.py` when `CLAUDE_PLUGIN_ROOT` is set, otherwise `scripts/transcribe.py` relative to the project root.
 
 ```bash
 python scripts/transcribe.py \
