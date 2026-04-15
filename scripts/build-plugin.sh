@@ -22,6 +22,7 @@ cp -r "$REPO_ROOT/.claude/skills/coquill-transcriber" "$REPO_ROOT/plugin/skills/
 cp -r "$REPO_ROOT/templates/_examples"             "$REPO_ROOT/plugin/templates/"
 cp "$REPO_ROOT/scripts/analyze.py"                 "$REPO_ROOT/plugin/scripts/"
 cp "$REPO_ROOT/scripts/render.py"                  "$REPO_ROOT/plugin/scripts/"
+cp "$REPO_ROOT/scripts/transcribe.py"              "$REPO_ROOT/plugin/scripts/"
 
 if [[ -n "$VERSION" ]]; then
   echo "Injecting version $VERSION ..."
