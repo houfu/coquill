@@ -48,15 +48,11 @@ CoQuill installs once at the account level via the plugin marketplace. After ins
    /plugin install coquill@coquill
    ```
 
-4. **Get the Bonterms NDA template**
-
-   Templates are distributed as a separate **examples pack**. Download it and unzip into your Cowork project's `templates/` folder:
-
-   [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip)
-
-   After unzipping, you should see `templates/Bonterms_Mutual_NDA/Bonterms-Mutual-NDA.docx`.
-
 </Steps>
+
+<Aside type="note" title="Sandboxed or offline?">
+The example templates are distributed separately from the plugin. The next section relies on Claude downloading the pack on demand. If Claude can't run `curl` and `unzip` in your environment, grab it manually instead: [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip). Unzip into your project's `templates/` folder so `templates/Bonterms_Mutual_NDA/Bonterms-Mutual-NDA.docx` is in place before you continue.
+</Aside>
 
 ## Prepare the NDA
 
@@ -72,9 +68,22 @@ CoQuill installs once at the account level via the plugin marketplace. After ins
 
    ![Screenshot showing the Cowork screen with a prompt "Prepare a mutual NDA with CoQuill" entered.](/coquill/images/quickstarts/CoQuill-start.png)
 
-2. **Claude prepares the NDA**
+2. **Claude offers to download the examples pack**
 
-   Once Claude receives the task, it matches your request to the `Bonterms_Mutual_NDA` template in your project's `templates/` folder, analyses it for variables, and starts the interview. In the background, Claude installs the dependencies it needs and reads the template. It looks for variables and creates a plan on how to ask and group questions to fill the template.
+   Since the project doesn't have any templates yet, Claude pauses and asks:
+
+   ```
+   I don't see any templates in this project yet. CoQuill publishes an
+   examples pack (Bonterms Mutual NDA, invoice, meeting notes) you can
+   use to try it out — would you like me to download it now?
+   > Yes
+   ```
+
+   Claude fetches `coquill-examples-latest.zip` and unzips it into `templates/`. After this step you have `templates/Bonterms_Mutual_NDA/`, `templates/invoice/`, and `templates/meeting_notes/` ready to use. Subsequent documents in the same project skip this step.
+
+3. **Claude prepares the NDA**
+
+   Once the pack is in place, Claude matches your request to the `Bonterms_Mutual_NDA` template, analyses it for variables, and starts the interview. In the background, Claude installs the dependencies it needs and reads the template. It looks for variables and creates a plan on how to ask and group questions to fill the template.
 
 </Steps>
 
@@ -83,7 +92,7 @@ The first time you run CoQuill on a template, Claude is running code to analyse 
 </Aside>
 
 <Steps>
-3. **Answer the interview questions**
+4. **Answer the interview questions**
 
    Claude walks through the 13 variables in the template, grouping related fields together. Here is what a typical interview looks like:
 
@@ -131,7 +140,7 @@ The first time you run CoQuill on a template, Claude is running code to analyse 
    > 2026-03-01
    ```
 
-4. **Confirm the values**
+5. **Confirm the values**
 
    Claude presents a summary of all collected values and asks you to confirm before rendering:
 
@@ -152,7 +161,7 @@ The first time you run CoQuill on a template, Claude is running code to analyse 
    > Yes, go ahead
    ```
 
-5. **Get the output file**
+6. **Get the output file**
 
    Claude renders the template and saves the completed document to the `output/` folder:
 

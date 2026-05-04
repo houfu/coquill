@@ -29,24 +29,20 @@ You need a [Claude Cowork](https://claude.ai) account on Pro or Max. No other so
 
    CoQuill is now available in every Cowork project on your account -- you do not need to reinstall it per-project.
 
-3. **Get a starter template**
+3. **Verify the install**
 
-   The plugin ships the engine only — templates are distributed as a separate **examples pack**. Download it from the latest release and unzip it into your Cowork project's `templates/` folder:
+   In any Cowork project, tell Claude: *"Prepare a mutual NDA with CoQuill"*
 
-   [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip)
-
-   After unzipping, you should see `templates/Bonterms_Mutual_NDA/`, `templates/invoice/`, and `templates/meeting_notes/`.
-
-4. **Verify the install**
-
-   In the same Cowork project, tell Claude: *"Prepare a mutual NDA with CoQuill"*
-
-   Claude should find the `Bonterms_Mutual_NDA` template and start the interview.
+   If the project has no templates yet, Claude will offer to download CoQuill's examples pack (Bonterms NDA, invoice, meeting notes). Confirm, and Claude fetches and unzips it into `templates/` before starting the NDA interview.
 
 </Steps>
 
 <Aside type="tip">
 On the first run, Claude installs the required Python packages (`docxtpl`, `pyyaml`, `jinja2`, `weasyprint`) automatically. The first install takes about 30 seconds; after that, packages are cached locally.
+</Aside>
+
+<Aside type="note" title="Sandboxed or offline?">
+If Claude can't run `curl` and `unzip` in your environment, grab the pack manually: [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip). Unzip into your project's `templates/` folder so you see `templates/Bonterms_Mutual_NDA/`, `templates/invoice/`, and `templates/meeting_notes/`.
 </Aside>
 
 ## Adding your own templates
