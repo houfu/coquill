@@ -14,58 +14,67 @@ CoQuill ships with the [Bonterms Mutual NDA](https://bonterms.com/download-cente
 ## Get a Claude account and download the Desktop app
 
 <Aside>
-Skip this step if you already have a Claude Pro or Max account and downloaded the Desktop App.  
+Skip this step if you already have a Claude Pro or Max account and downloaded the Desktop App.
 </Aside>
 
 <Steps>
 1. Go to [Claude](https://claude.ai) and get an account. You will need at least Claude Pro (USD20/month) in order to use Cowork.
 
-2. Download the [Claude Desktop App](https://claude.com/download) for Windows or Mac. Follow the instructions to install the app in your computer and connect it to your account.  
+2. Download the [Claude Desktop App](https://claude.com/download) for Windows or Mac. Follow the instructions to install the app on your computer and connect it to your account.
 
 </Steps>
 
-## Download the latest CoQuill Folder
+## Install CoQuill
 
-  There are several ways to use CoQuill. For this quickstart, download the latest release:
+CoQuill installs once at the account level via the plugin marketplace. After install, it is available in every Cowork project you open.
 
-  **[⬇ Download coquill-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-latest.zip)**
+<Steps>
 
-  Extract the contents to a place where you can find it (Downloads or Documents).
+1. **Open Claude Cowork**
 
-![Screenshot showing the release folder](/coquill/images/quickstarts/highlight_release_folder.png)
+   Open the Claude Desktop App and switch to the Cowork tab (Cmd+2 on Mac).
 
-<Aside>
-  **Don't download the plugin file.** The plugin is used for Claude Code and other plugin marketplaces.
-</Aside>
+2. **Add the CoQuill marketplace**
+
+   In the chat input, run:
+
+   ```
+   /plugin marketplace add houfu/coquill
+   ```
+
+3. **Install the plugin**
+
+   ```
+   /plugin install coquill@coquill
+   ```
+
+</Steps>
 
 ## Prepare the NDA
 
 <Steps>
 
-1. **Open Claude Cowork and use your CoQuill folder**
+1. **Ask Claude to prepare the NDA**
 
-    Open the Claude Desktop App and switch to the Cowork Tab (Cmd+2 on Mac). Work in the Cowork folder you just downloaded by selecting it in the dropdown box.
+   In any Cowork project, type a natural request:
 
-    Type a natural request:
+   ```
+   Prepare a mutual NDA with CoQuill.
+   ```
 
-    ```
-    Prepare a mutual NDA with CoQuill.
-    ```
-
-    ![Screenshot showing the Cowork screen with the CoQuill folder selected, and a prompt "Prepare a mutual NDA with CoQuill" is entered.](/coquill/images/quickstarts/CoQuill-start.png)
+   ![Screenshot showing the Cowork screen with a prompt "Prepare a mutual NDA with CoQuill" entered.](/coquill/images/quickstarts/CoQuill-start.png)
 
 2. **Claude prepares the NDA**
 
-   Once Claude receives the task, it matches your request to the `Bonterms_Mutual_NDA` template, analyzes it for variables, and starts the interview. In the background, Claude installs the dependencies it needs and reads the templates. It looks for variables and creates a plan on how to ask and group questions in order to fill the template. 
+   Once Claude receives the task, it matches your request to the bundled `Bonterms_Mutual_NDA` template, analyses it for variables, and starts the interview. In the background, Claude installs the dependencies it needs and reads the template. It looks for variables and creates a plan on how to ask and group questions to fill the template.
 
-  
 </Steps>
 
 <Aside>
-The first time you run CoQuill on a template, Claude is running code to analyse the template in detecting variables and generating questions. This file is saved in the template folder, speeding up future runs (at least until the next time you adjust the template.)
+The first time you run CoQuill on a template, Claude is running code to analyse the template, detect variables, and generate questions. This file is saved alongside the template, speeding up future runs (until the next time the template changes).
 </Aside>
 
-<Steps>  
+<Steps>
 3. **Answer the interview questions**
 
    Claude walks through the 13 variables in the template, grouping related fields together. Here is what a typical interview looks like:
@@ -148,14 +157,14 @@ The first time you run CoQuill on a template, Claude is running code to analyse 
 
    Open the `.docx` file in Word, Google Docs, or any compatible application to review the final document. The `transcript.md` records the full interview — questions, answers, and confirmed values — so you can review what was discussed without scrolling through the chat.
 
-     ![Screenshot showing the Cowork screen with the a pane on the right showing the rendered contract.](/coquill/images/quickstarts/Quickstart-results.png)
+   ![Screenshot showing the Cowork screen with a pane on the right showing the rendered contract.](/coquill/images/quickstarts/Quickstart-results.png)
 </Steps>
 
 ## What just happened
 
 Behind the scenes, CoQuill ran four steps:
 
-1. **Discovery** -- Claude matched "mutual NDA" to the `Bonterms_Mutual_NDA` template directory
+1. **Discovery** -- Claude matched "mutual NDA" to the `Bonterms_Mutual_NDA` template directory bundled with the plugin
 2. **Analysis** -- The Analyzer skill parsed the `.docx` template, extracted all 13 variables, and produced a `manifest.yaml`
 3. **Rendering** -- After you confirmed the values, the Renderer skill used `docxtpl` to fill in the template and saved the output
 4. **Transcript** -- The Transcriber skill wrote a human-readable `transcript.md` recording the interview alongside your document

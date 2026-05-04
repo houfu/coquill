@@ -1,7 +1,7 @@
 ![CoQuill Logo](./docs/public/images/logo.png)
 # CoQuill
 
-CoQuill is a document assembly tool for people already working with Claude and AI. If you're comfortable chatting with Claude, there's nothing new to learn — just ask it to prepare a document with CoQuill. Claude interviews you conversationally, collects the answers, and renders completed documents from your templates. No server, no database, no scripting language to learn. The whole project is a folder you can share as a zip — or deploy as a Claude Code plugin across your organisation in minutes.
+CoQuill is a document assembly tool for people already working with Claude and AI. If you're comfortable chatting with Claude, there's nothing new to learn — just ask it to prepare a document with CoQuill. Claude interviews you conversationally, collects the answers, and renders completed documents from your templates. No server, no database, no scripting language to learn. Install CoQuill once via the plugin marketplace in Claude Cowork or Claude Code, then share template stacks with colleagues as zip files.
 
 ## How It Works
 
@@ -22,24 +22,20 @@ Two template formats are supported:
 
 ### Prerequisites
 
-You'll need a [Claude Cowork](https://claude.ai) account.
+You'll need a [Claude Cowork](https://claude.ai) account on Pro or Max, or [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
-### Download CoQuill
+### Install via the plugin marketplace
 
-Go to the [Releases](https://github.com/houfu/coquill/releases) page and download the latest `coquill-v*.zip` file. Extract it to a folder of your choice (e.g., your Documents folder).
+In either Claude Cowork or Claude Code, run:
 
-### Open in Cowork
+```
+/plugin marketplace add houfu/coquill
+/plugin install coquill@coquill
+```
 
-1. Open Claude Cowork and add the extracted folder as a project
-2. That's it — no terminal or coding knowledge required. Python dependencies are installed automatically the first time you use the skill.
+That's it — no terminal or coding knowledge required for Cowork. Python dependencies are installed automatically the first time you use the skill.
 
-### Claude Code
-
-From within Claude Code:
-
-1. Add the marketplace: `/plugin marketplace add houfu/coquill`
-2. Install the plugin: `/plugin install coquill@coquill`
-3. Say "prepare an NDA with CoQuill" to try it out with a built-in template
+To try it out with a built-in template, say: *"Prepare an NDA with CoQuill."*
 
 ## Quick Start
 

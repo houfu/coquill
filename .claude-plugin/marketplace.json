@@ -7,7 +7,26 @@
     {
       "name": "coquill",
       "source": "./plugin",
-      "description": "Document assembly tool with conditional logic, loops, and developer configuration."
+      "description": "Document assembly tool with conditional logic, loops, and developer configuration.",
+      "homepage": "https://houfu.github.io/coquill",
+      "repository": "https://github.com/houfu/coquill",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "document-assembly",
+        "templates",
+        "docx",
+        "html",
+        "interview",
+        "legal",
+        "contracts"
+      ],
+      "tags": [
+        "documents",
+        "automation",
+        "templates",
+        "interview"
+      ]
     }
   ]
 }

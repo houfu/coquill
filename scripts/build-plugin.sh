@@ -25,7 +25,7 @@ cp "$REPO_ROOT/scripts/render.py"                  "$REPO_ROOT/plugin/scripts/"
 
 if [[ -n "$VERSION" ]]; then
   echo "Injecting version $VERSION ..."
-  sed -i.bak "s/\"0\.0\.0\"/\"${VERSION}\"/" "$REPO_ROOT/plugin/.claude-plugin/plugin.json"
+  sed -i.bak -E "s/(\"version\":[[:space:]]*)\"[^\"]*\"/\1\"${VERSION}\"/" "$REPO_ROOT/plugin/.claude-plugin/plugin.json"
   rm "$REPO_ROOT/plugin/.claude-plugin/plugin.json.bak"
 fi
 

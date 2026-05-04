@@ -1,37 +1,39 @@
 ---
 title: Easy to Install
-description: No server, no database, no hosting — just download and go
+description: No server, no database, no hosting — install once with one command
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-CoQuill runs entirely inside Claude. There is no server to spin up, no database to configure, and nothing to host. You get document automation the moment you install it.
+CoQuill runs entirely inside Claude. There is no server to spin up, no database to configure, and nothing to host. You install it once with a single command and it is available across every Cowork project on your account.
 
 <Aside type="note">
   Docassemble, the most capable open-source alternative, requires a Linux server running Docker and ongoing maintenance. HotDocs requires an enterprise deployment engagement before the first document can be produced.
 </Aside>
 
-## Two ways to install
+## One install, two clients
 
-The canonical setup is Claude Cowork with the folder download -- no terminal, no configuration, and no plugin marketplace needed. Claude Code and compatible clients are also supported for users who prefer a terminal-based workflow.
+Both Claude Cowork and Claude Code install CoQuill the same way: by adding the plugin marketplace.
 
-**Claude Cowork** -- Download the latest `coquill-v*.zip` from [GitHub Releases](https://github.com/houfu/coquill/releases), unzip it, and open the folder as a new Cowork project. Done.
+**Claude Cowork** -- open any Cowork project and run:
 
-**Claude Code** -- Run a single command:
+```
+/plugin marketplace add houfu/coquill
+/plugin install coquill@coquill
+```
+
+**Claude Code** -- run the same commands in your terminal:
 
 ```bash
 /plugin marketplace add houfu/coquill
+/plugin install coquill@coquill
 ```
 
-That is the entire installation process.
+That is the entire installation process. CoQuill is now available everywhere -- in any Cowork project, in any Claude Code workspace, on every machine where you sign in.
 
-## No terminal required
+## Installed once, available everywhere
 
-<Aside>This section applies to **Claude Cowork**. If you want to use Claude Code or others, be our guest!</Aside>
-
-If you are not a developer, Claude Cowork is the right choice. Installation is just two steps: download a zip file and open the folder. That is it — no terminal, no command line, no coding environment, nothing to configure.
-
-Everything else happens inside the Claude conversation you already know how to use.
+CoQuill installs at the account level, not per-project. After install, every Cowork project you open already has CoQuill ready to use. No per-folder setup, no copy-pasting skills into each project, no re-installation when you start a new piece of work.
 
 ## Dependencies handle themselves
 
@@ -43,11 +45,11 @@ There is no standalone application, no Electron window, no browser tab to keep o
 
 That means zero context-switching. Ask Claude to prepare a document with CoQuill, answer a few questions, and the finished file appears in your `output/` folder -- all without leaving the chat.
 
-## Share it with a colleague
+## Share template stacks with a colleague
 
-Because CoQuill is just a folder, it is completely portable. If you have built a set of templates for your own work, sharing them is as simple as zipping up the folder and sending it over. Your colleague opens it as a Cowork project on their own machine and can use the same templates to produce the same documents.
+Because CoQuill is installed once per account, sharing a stack of templates with a colleague is just sharing the templates. Zip up a `templates/` folder, send it to a teammate who already has CoQuill installed, and they drop it into a Cowork project of their own to start producing the same documents.
 
-No deployment, no shared server, no access management. The whole setup travels in a zip file.
+No deployment, no shared server, no access management. The whole template stack travels in a zip file. The CoQuill engine is already on their account.
 
 ## Your files stay local
 
