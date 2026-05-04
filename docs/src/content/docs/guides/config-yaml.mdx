@@ -3,7 +3,13 @@ title: Configuring with config.yaml
 description: Customise the interview experience with an optional config.yaml alongside your template
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 An optional `config.yaml` file placed next to your template gives you full control over the interview experience — without modifying the template itself. The Analyzer merges it into the manifest; the Orchestrator reads only the manifest.
+
+<Aside>
+This guide uses the `meeting_notes` template as a worked example. It is part of the [examples pack](/coquill/reference/templates/#example-templates) — download and unzip it into your project's `templates/` folder to follow along.
+</Aside>
 
 ```
 templates/

@@ -54,10 +54,14 @@ jobs:
       - name: Package plugin ZIP
         run: zip -r "coquill-plugin-v${TAG}.zip" plugin/
 
+      - name: Package examples ZIP
+        run: |
+          ( cd templates/_examples && zip -r "../../coquill-examples-v${TAG}.zip" . )
+
       - name: Create latest-named aliases
         run: |
-          cp "coquill-v${TAG}.zip" coquill-latest.zip
           cp "coquill-plugin-v${TAG}.zip" coquill-plugin-latest.zip
+          cp "coquill-examples-v${TAG}.zip" coquill-examples-latest.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -66,6 +70,7 @@ jobs:
           files: |
             ${{ env.ZIP_NAME }}
             coquill-plugin-v${{ env.TAG }}.zip
-            coquill-latest.zip
+            coquill-examples-v${{ env.TAG }}.zip
             coquill-plugin-latest.zip
+            coquill-examples-latest.zip
           generate_release_notes: true

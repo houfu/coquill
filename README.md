@@ -35,7 +35,7 @@ In either Claude Cowork or Claude Code, run:
 
 That's it — no terminal or coding knowledge required for Cowork. Python dependencies are installed automatically the first time you use the skill.
 
-To try it out with a built-in template, say: *"Prepare an NDA with CoQuill."*
+To try it out, download the [examples pack](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip) and unzip it into your project's `templates/` folder, then say: *"Prepare an NDA with CoQuill."*
 
 ## Quick Start
 
@@ -255,7 +255,7 @@ coquill/
 │   ├── coquill_mvp_spec.md           # Original MVP specification
 │   └── coquill_v2_spec.md            # Full v2 specification
 ├── templates/
-│   ├── _examples/                    # Bundled example templates (tracked in git)
+│   ├── _examples/                    # Example templates (in this repo only — distributed as coquill-examples-*.zip, not via the plugin)
 │   │   ├── Bonterms_Mutual_NDA/
 │   │   │   └── Bonterms-Mutual-NDA.docx
 │   │   ├── invoice/

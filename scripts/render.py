@@ -8,12 +8,11 @@ to stdout.
 
 Usage:
     python scripts/render.py \
-        --template templates/_examples/invoice/invoice.html \
-        --format html \
+        --template templates/Bonterms_Mutual_NDA/Bonterms-Mutual-NDA.docx \
+        --format docx \
         --context context.json \
         --output-dir output/ \
-        --job-name invoice_acme_2026-02-28 \
-        --pdf
+        --job-name Bonterms_Mutual_NDA_acme_2026-03-01
 """
 
 import argparse

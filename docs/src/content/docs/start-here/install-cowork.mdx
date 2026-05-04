@@ -29,11 +29,19 @@ You need a [Claude Cowork](https://claude.ai) account on Pro or Max. No other so
 
    CoQuill is now available in every Cowork project on your account -- you do not need to reinstall it per-project.
 
-3. **Verify the install**
+3. **Get a starter template**
 
-   In any Cowork project, tell Claude: *"Prepare a mutual NDA with CoQuill"*
+   The plugin ships the engine only — templates are distributed as a separate **examples pack**. Download it from the latest release and unzip it into your Cowork project's `templates/` folder:
 
-   Claude should find the bundled Bonterms Mutual NDA template and start the interview.
+   [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip)
+
+   After unzipping, you should see `templates/Bonterms_Mutual_NDA/`, `templates/invoice/`, and `templates/meeting_notes/`.
+
+4. **Verify the install**
+
+   In the same Cowork project, tell Claude: *"Prepare a mutual NDA with CoQuill"*
+
+   Claude should find the `Bonterms_Mutual_NDA` template and start the interview.
 
 </Steps>
 

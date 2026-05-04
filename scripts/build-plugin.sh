@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Sync skills and templates into plugin/ so it is a complete, installable package.
+# Sync skills and scripts into plugin/ so it is a complete, installable package.
+# Templates are NOT bundled with the plugin — they are distributed as a separate
+# coquill-examples-v*.zip download.
 # Usage:
 #   ./scripts/build-plugin.sh           # local dev — no version injection
 #   ./scripts/build-plugin.sh 3         # CI — injects version into plugin.json
@@ -8,18 +10,16 @@ set -euo pipefail
 VERSION="${1:-}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-echo "Syncing skills and templates into plugin/ ..."
+echo "Syncing skills and scripts into plugin/ ..."
 
 rm -rf "$REPO_ROOT/plugin/skills" "$REPO_ROOT/plugin/templates" "$REPO_ROOT/plugin/scripts"
 mkdir -p "$REPO_ROOT/plugin/skills"
-mkdir -p "$REPO_ROOT/plugin/templates"
 mkdir -p "$REPO_ROOT/plugin/scripts"
 
 cp -r "$REPO_ROOT/.claude/skills/coquill"              "$REPO_ROOT/plugin/skills/"
 cp -r "$REPO_ROOT/.claude/skills/coquill-analyzer"    "$REPO_ROOT/plugin/skills/"
 cp -r "$REPO_ROOT/.claude/skills/coquill-renderer"    "$REPO_ROOT/plugin/skills/"
 cp -r "$REPO_ROOT/.claude/skills/coquill-transcriber" "$REPO_ROOT/plugin/skills/"
-cp -r "$REPO_ROOT/templates/_examples"             "$REPO_ROOT/plugin/templates/"
 cp "$REPO_ROOT/scripts/analyze.py"                 "$REPO_ROOT/plugin/scripts/"
 cp "$REPO_ROOT/scripts/render.py"                  "$REPO_ROOT/plugin/scripts/"
 

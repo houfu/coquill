@@ -1,14 +1,14 @@
 ---
 title: Quickstart
-description: Prepare your first document with CoQuill in under five minutes using the bundled Bonterms Mutual NDA
+description: Prepare your first document with CoQuill in under five minutes using the Bonterms Mutual NDA example
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
 
-This guide walks you through preparing the bundled **Bonterms Mutual NDA** using Claude Cowork. You will go from zero to a completed Word document in under five minutes.
+This guide walks you through preparing the **Bonterms Mutual NDA** example using Claude Cowork. You will go from zero to a completed Word document in under five minutes.
 
 <Aside>
-CoQuill ships with the [Bonterms Mutual NDA](https://bonterms.com/download-center/mutual-nda) as an example template. It is a real, production-quality mutual NDA released under CC BY 4.0.
+CoQuill includes the [Bonterms Mutual NDA](https://bonterms.com/download-center/mutual-nda) in its example templates pack. It is a real, production-quality mutual NDA released under CC BY 4.0.
 </Aside>
 
 ## Get a Claude account and download the Desktop app
@@ -48,6 +48,14 @@ CoQuill installs once at the account level via the plugin marketplace. After ins
    /plugin install coquill@coquill
    ```
 
+4. **Get the Bonterms NDA template**
+
+   Templates are distributed as a separate **examples pack**. Download it and unzip into your Cowork project's `templates/` folder:
+
+   [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip)
+
+   After unzipping, you should see `templates/Bonterms_Mutual_NDA/Bonterms-Mutual-NDA.docx`.
+
 </Steps>
 
 ## Prepare the NDA
@@ -66,7 +74,7 @@ CoQuill installs once at the account level via the plugin marketplace. After ins
 
 2. **Claude prepares the NDA**
 
-   Once Claude receives the task, it matches your request to the bundled `Bonterms_Mutual_NDA` template, analyses it for variables, and starts the interview. In the background, Claude installs the dependencies it needs and reads the template. It looks for variables and creates a plan on how to ask and group questions to fill the template.
+   Once Claude receives the task, it matches your request to the `Bonterms_Mutual_NDA` template in your project's `templates/` folder, analyses it for variables, and starts the interview. In the background, Claude installs the dependencies it needs and reads the template. It looks for variables and creates a plan on how to ask and group questions to fill the template.
 
 </Steps>
 
@@ -164,7 +172,7 @@ The first time you run CoQuill on a template, Claude is running code to analyse 
 
 Behind the scenes, CoQuill ran four steps:
 
-1. **Discovery** -- Claude matched "mutual NDA" to the `Bonterms_Mutual_NDA` template directory bundled with the plugin
+1. **Discovery** -- Claude matched "mutual NDA" to the `Bonterms_Mutual_NDA` template directory in your project's `templates/` folder
 2. **Analysis** -- The Analyzer skill parsed the `.docx` template, extracted all 13 variables, and produced a `manifest.yaml`
 3. **Rendering** -- After you confirmed the values, the Renderer skill used `docxtpl` to fill in the template and saved the output
 4. **Transcript** -- The Transcriber skill wrote a human-readable `transcript.md` recording the interview alongside your document

@@ -18,8 +18,8 @@ v2 templates may contain conditional sections (`{% if %}` / `{% else %}`) and lo
 
 ## Phase 1 — Template Discovery
 
-1. Search for templates in priority order: `templates/` (user templates, highest priority), `${CLAUDE_PLUGIN_ROOT}/templates/_examples/` (bundled plugin templates, when `CLAUDE_PLUGIN_ROOT` is set), `templates/_examples/` (bundled Cowork templates, fallback). Each subdirectory name is a template identifier. When `CLAUDE_PLUGIN_ROOT` is set, label bundled templates "(built-in)".
-2. If the user's request clearly maps to a template, select it automatically. If ambiguous, present all available templates and ask. Match fuzzily — "tenancy" matches `tenancy_agreement/`, "meeting" matches `meeting_notes/`. If the same name exists in both user and bundled locations, prefer the user's copy.
+1. Search for templates in `templates/` (project-local). Each subdirectory name is a template identifier.
+2. If the user's request clearly maps to a template, select it automatically. If ambiguous, present all available templates and ask. Match fuzzily — "tenancy" matches `tenancy_agreement/`, "meeting" matches `meeting_notes/`. If `templates/` does not exist or contains no template directories, tell the user there are no templates available and point them to the example templates pack: `https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip` (unzip into the project's `templates/` folder).
 3. If the template has `meta.display_name` in its manifest, use that when presenting to the user.
 4. Note the user's exact opening request — the message that triggered this skill. Store it as `session_request` for use in the interview log (Phase 3d).
 
