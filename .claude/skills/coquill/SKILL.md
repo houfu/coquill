@@ -18,10 +18,25 @@ v2 templates may contain conditional sections (`{% if %}` / `{% else %}`) and lo
 
 ## Phase 1 — Template Discovery
 
-1. Search for templates in priority order: `templates/` (user templates, highest priority), `${CLAUDE_PLUGIN_ROOT}/templates/_examples/` (bundled plugin templates, when `CLAUDE_PLUGIN_ROOT` is set), `templates/_examples/` (bundled Cowork templates, fallback). Each subdirectory name is a template identifier. When `CLAUDE_PLUGIN_ROOT` is set, label bundled templates "(built-in)".
-2. If the user's request clearly maps to a template, select it automatically. If ambiguous, present all available templates and ask. Match fuzzily — "tenancy" matches `tenancy_agreement/`, "meeting" matches `meeting_notes/`. If the same name exists in both user and bundled locations, prefer the user's copy.
-3. If the template has `meta.display_name` in its manifest, use that when presenting to the user.
-4. Note the user's exact opening request — the message that triggered this skill. Store it as `session_request` for use in the interview log (Phase 3d).
+1. Search for templates in `templates/` (project-local). Each subdirectory name is a template identifier.
+
+2. **If `templates/` does not exist or contains no template subdirectories**, offer to download the examples pack before giving up. Tell the user: *"I don't see any templates in this project yet. CoQuill publishes an examples pack (Bonterms Mutual NDA, invoice, meeting notes) you can use to try it out — would you like me to download it now?"*
+   - **On confirmation:** check that `curl` and `unzip` are on `PATH` first (`command -v curl` and `command -v unzip`). If either is missing, abort the auto-fetch and point the user at the manual download: `https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip` (unzip into `templates/`). Otherwise run:
+     ```
+     mkdir -p templates && \
+     curl -fsSL -o /tmp/coquill-examples.zip \
+       https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip && \
+     unzip -q -n /tmp/coquill-examples.zip -d templates/ && \
+     rm /tmp/coquill-examples.zip
+     ```
+     `unzip -n` (never overwrite) protects existing files. On any non-zero exit, report the failure to the user and fall back to the manual URL above. On success, list the newly-available templates and continue to step 3.
+   - **On decline:** tell the user they can add their own template at `templates/<name>/<file>.docx|html|md` and end the session.
+
+3. If the user's request clearly maps to a template, select it automatically. If ambiguous, present all available templates and ask. Match fuzzily — "tenancy" matches `tenancy_agreement/`, "meeting" matches `meeting_notes/`.
+
+4. If the template has `meta.display_name` in its manifest, use that when presenting to the user.
+
+5. Note the user's exact opening request — the message that triggered this skill. Store it as `session_request` for use in the interview log (Phase 3d).
 
 ---
 

@@ -1,8 +1,20 @@
 {
   "name": "coquill",
   "description": "Document assembly tool. Interview users and render completed documents from docx/HTML templates with conditional logic, loops, and developer configuration.",
-  "version": "2",
+  "version": "0.0.0",
   "author": {
     "name": "Ang Hou Fu"
-  }
+  },
+  "homepage": "https://houfu.github.io/coquill",
+  "repository": "https://github.com/houfu/coquill",
+  "license": "MIT",
+  "keywords": [
+    "document-assembly",
+    "templates",
+    "docx",
+    "html",
+    "interview",
+    "legal",
+    "contracts"
+  ]
 }

@@ -6,7 +6,7 @@ description: Add CoQuill to Claude Code with one command
 import { Steps, Aside } from '@astrojs/starlight/components';
 
 <Aside type="note">
-  The canonical CoQuill setup is Claude Cowork with the folder download -- no terminal required. This page covers installation for users who prefer to work in Claude Code.
+  The canonical CoQuill setup is Claude Cowork. CoQuill installs the same way in both clients -- this page covers Claude Code specifically.
 </Aside>
 
 ## Prerequisites
@@ -17,28 +17,33 @@ You need the [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI i
 
 <Steps>
 
-1. **Install the plugin**
+1. **Add the marketplace and install the plugin**
 
-   Run the following command in your terminal:
+   Run the following commands in Claude Code:
 
-   ```bash
+   ```
    /plugin marketplace add houfu/coquill
+   /plugin install coquill@coquill
    ```
 
 2. **Verify the install**
 
-   Run `/skills` in Claude Code and confirm that `coquill` appears in the list of available skills.
+   Run `/plugin` in Claude Code and confirm that `coquill` appears in the list of installed plugins.
 
 3. **Run your first document**
 
    Tell Claude: *"Prepare a mutual NDA with CoQuill"*
 
-   Claude should find the bundled Bonterms Mutual NDA template and start the interview.
+   If the project has no templates yet, Claude will offer to download CoQuill's examples pack (Bonterms NDA, invoice, meeting notes). Confirm, and Claude fetches and unzips it into `templates/` before starting the NDA interview.
 
 </Steps>
 
 <Aside type="tip">
 On the first run, Claude installs the required Python packages (`docxtpl`, `pyyaml`, `jinja2`, `weasyprint`) automatically. This takes about 30 seconds and only happens once.
+</Aside>
+
+<Aside type="note" title="Sandboxed or offline?">
+If Claude can't run `curl` and `unzip` in your environment, grab the pack manually: [coquill-examples-latest.zip](https://github.com/houfu/coquill/releases/latest/download/coquill-examples-latest.zip). Unzip into your project's `templates/` folder so you see `templates/Bonterms_Mutual_NDA/`, `templates/invoice/`, and `templates/meeting_notes/`.
 </Aside>
 
 ## Next steps
