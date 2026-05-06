@@ -109,6 +109,116 @@ def extract_text(template_path, template_format):
     return text
 
 
+# Jinja2 built-in globals + docxtpl runtime helpers. Callable references
+# in {{ }} / {% %} bodies that aren't in this set get flagged by
+# detect_undefined_callables() below. False positives are acceptable —
+# the warning prompts the author to register the helper or rewrite.
+KNOWN_CALLABLES = {
+    "range",
+    "dict",
+    "lipsum",
+    "cycler",
+    "joiner",
+    "namespace",
+    "R",
+    "RichText",
+    "Subdoc",
+    "InlineImage",
+    "Listing",
+}
+
+
+_RE_BLOCK_TAG = re.compile(r"\{%-?\s*(.*?)\s*-?%\}", re.DOTALL)
+_RE_VAR_TAG = re.compile(r"\{\{\s*(.*?)\s*\}\}", re.DOTALL)
+_RE_DOCXTPL_PREFIX = re.compile(
+    r"\{%([-\s]*)(p|tr|tc)(?=[-\s]*(?:if|else|elif|endif|for|endfor)\b)"
+)
+
+
+def _iter_tag_bodies(text):
+    """Yield (match_start, match_end, body) for every {% %} and {{ }}."""
+    for m in _RE_BLOCK_TAG.finditer(text):
+        yield m.start(), m.end(), m.group(1)
+    for m in _RE_VAR_TAG.finditer(text):
+        yield m.start(), m.end(), m.group(1)
+_SMART_QUOTE_MAP = {
+    "“": '"',
+    "”": '"',
+    "‘": "'",
+    "’": "'",
+}
+
+
+def sanitize_for_analysis(text):
+    """Normalize Word-introduced artifacts inside Jinja tag bodies.
+
+    Returns (sanitized_text, warnings). The original template file is
+    not modified; this only rewrites the analysis-time string so the
+    downstream regex walker can recognize prefixed tags and equality
+    conditions that Word's autocorrect mangled.
+    """
+    warnings = []
+
+    def _strip_prefix(m):
+        prefix = m.group(2)
+        warnings.append(
+            f"docxtpl_prefix: stripped {prefix!r} prefix from "
+            f"{{%{prefix}...%}} at offset {m.start()}"
+        )
+        return "{%" + m.group(1)
+
+    text = _RE_DOCXTPL_PREFIX.sub(_strip_prefix, text)
+
+    # Replace smart quotes only inside tag bodies. Prose may legitimately
+    # use curly quotes, so we don't touch text outside {% %} / {{ }}.
+    spans = sorted(
+        [(s, e) for s, e, _ in _iter_tag_bodies(text)], key=lambda x: x[0]
+    )
+    chars = list(text)
+    for start, end in spans:
+        for i in range(start, end):
+            ch = chars[i]
+            if ch in _SMART_QUOTE_MAP:
+                straight = _SMART_QUOTE_MAP[ch]
+                warnings.append(
+                    f"smart_quote: replaced U+{ord(ch):04X} with "
+                    f"{straight} in tag at offset {i}"
+                )
+                chars[i] = straight
+    return "".join(chars), warnings
+
+
+_RE_CALLABLE_IN_BODY = re.compile(r"(?<![\w.])(\w+)\s*\(")
+
+
+def detect_undefined_callables(text):
+    """Flag callable references in tag bodies that aren't registered
+    with the default Jinja2 + docxtpl environment."""
+    occurrences = {}
+    for _start, _end, body in _iter_tag_bodies(text):
+        for cm in _RE_CALLABLE_IN_BODY.finditer(body):
+            name = cm.group(1)
+            if name in KNOWN_CALLABLES:
+                continue
+            # Skip Jinja control keywords that legitimately appear
+            # before a paren-less expression (none of these should
+            # match \w+\( anyway, but be defensive).
+            if name in {"if", "elif", "else", "endif", "for", "endfor",
+                        "in", "and", "or", "not", "is", "true", "false",
+                        "True", "False", "None", "none"}:
+                continue
+            occurrences[name] = occurrences.get(name, 0) + 1
+
+    warnings = []
+    for name, count in occurrences.items():
+        plural = "occurrence" if count == 1 else "occurrences"
+        warnings.append(
+            f"undefined_callable: {name} ({count} {plural}) is not a "
+            f"registered Jinja global, filter, or docxtpl helper"
+        )
+    return warnings
+
+
 def analyze_template(text):
     """Two-pass analysis: find tags, classify variables into scopes."""
     # Regex patterns
@@ -291,7 +401,7 @@ def build_var_entry(name, boolean_gate_vars, infer_name=None):
 
 def build_manifest(
     template_dir, template_file, template_format, unconditional_vars,
-    conditionals, loops, boolean_gate_vars, config_path,
+    conditionals, loops, boolean_gate_vars, config_path, warnings=None,
 ):
     """Build the manifest dict from analyzed data and optional config."""
     # Build final variable lists
@@ -412,6 +522,9 @@ def build_manifest(
     if config and "validation" in config:
         manifest["validation"] = config["validation"]
 
+    if warnings:
+        manifest["warnings"] = warnings
+
     return manifest, variable_count
 
 
@@ -425,6 +538,14 @@ def main():
         action="store_true",
         help="Force regeneration, skip cache check",
     )
+    parser.add_argument(
+        "--lint",
+        action="store_true",
+        help=(
+            "Report sanitize/lint warnings only; do not write manifest. "
+            "Exits non-zero if any warnings are found."
+        ),
+    )
     args = parser.parse_args()
 
     template_dir = args.template_dir
@@ -433,18 +554,29 @@ def main():
     template_file, template_format = detect_template(template_dir)
     template_path = os.path.join(template_dir, template_file)
 
-    # Step 2: Check cache
+    # Step 2: Check cache (skipped in --lint mode; lint always re-runs)
     manifest_path = os.path.join(template_dir, "manifest.yaml")
     config_path = os.path.join(template_dir, "config.yaml")
 
-    if not args.force:
+    if not args.force and not args.lint:
         needs_regen = check_cache(manifest_path, template_path, config_path)
         if not needs_regen:
             print("Manifest is up to date. Skipping analysis.")
             sys.exit(0)
 
-    # Step 3: Extract text
+    # Step 3: Extract text and sanitize Word-introduced artifacts
     text = extract_text(template_path, template_format)
+    text, sanitize_warnings = sanitize_for_analysis(text)
+    callable_warnings = detect_undefined_callables(text)
+    warnings = sanitize_warnings + callable_warnings
+
+    if args.lint:
+        if warnings:
+            for w in warnings:
+                print(w)
+            sys.exit(1)
+        print("No lint warnings.")
+        sys.exit(0)
 
     # Step 4: Analyze
     unconditional_vars, conditionals, loops, boolean_gate_vars = analyze_template(text)
@@ -453,7 +585,7 @@ def main():
     manifest, variable_count = build_manifest(
         template_dir, template_file, template_format,
         unconditional_vars, conditionals, loops, boolean_gate_vars,
-        config_path,
+        config_path, warnings,
     )
 
     # Step 9: Write manifest
@@ -467,6 +599,8 @@ def main():
     print(f"  Variables: {variable_count}")
     print(f"  Conditionals: {len(manifest['conditionals'])}")
     print(f"  Loops: {len(manifest['loops'])}")
+    if warnings:
+        print(f"  Warnings: {len(warnings)}")
 
 
 if __name__ == "__main__":
