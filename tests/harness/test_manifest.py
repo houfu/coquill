@@ -222,10 +222,89 @@ def test_config_merge() -> bool:
     return ok
 
 
+def test_word_artifacts() -> bool:
+    """Smart quotes, {%p prefixes, and undefined callables produce
+    warnings and don't break analysis."""
+    print("\n=== Test: word_artifacts ===")
+    fixture_dir = FIXTURES_DIR / "word_artifacts"
+    run_analyzer(fixture_dir)
+    manifest = load_manifest(fixture_dir)
+
+    ok = True
+
+    conds = manifest.get("conditionals", [])
+    ok &= assert_eq("conditionals count", len(conds), 1)
+    if conds:
+        c = conds[0]
+        ok &= assert_eq("cond.gate_type", c.get("gate_type"), "equality")
+        ok &= assert_eq("cond.gate_variable", c.get("gate_variable"), "jurisdiction_type")
+        ok &= assert_eq("cond.gate_value", c.get("gate_value"), "siac")
+
+    loops = manifest.get("loops", [])
+    ok &= assert_eq("loops count", len(loops), 1)
+    if loops:
+        L = loops[0]
+        ok &= assert_eq("loop.loop_var", L.get("loop_var"), "party")
+        ok &= assert_eq("loop.collection", L.get("collection"), "parties_list")
+        sub_names = sorted(v["name"] for v in L.get("variables", []))
+        ok &= assert_eq("loop sub-vars", sub_names, ["name", "place_of_incorporation"])
+
+    warnings = manifest.get("warnings", [])
+    has_smart_quote = any(w.startswith("smart_quote:") for w in warnings)
+    has_prefix = any(w.startswith("docxtpl_prefix:") for w in warnings)
+    has_callable = any(
+        w.startswith("undefined_callable: country_name") for w in warnings
+    )
+    ok &= assert_eq("warnings has smart_quote", has_smart_quote, True)
+    ok &= assert_eq("warnings has docxtpl_prefix", has_prefix, True)
+    ok &= assert_eq("warnings has undefined_callable", has_callable, True)
+
+    return ok
+
+
+def test_lint_flag() -> bool:
+    """--lint exits non-zero on warnings and writes no manifest."""
+    print("\n=== Test: lint_flag ===")
+    fixture_dir = FIXTURES_DIR / "word_artifacts"
+    manifest_path = fixture_dir / "manifest.yaml"
+    if manifest_path.exists():
+        manifest_path.unlink()
+
+    result = subprocess.run(
+        ["uv", "run", str(ANALYZE_PY), str(fixture_dir), "--lint"],
+        capture_output=True,
+        text=True,
+        cwd=str(TESTS_DIR),
+    )
+
+    ok = True
+    ok &= assert_eq("lint exit code", result.returncode, 1)
+    ok &= assert_eq("manifest written", manifest_path.exists(), False)
+    ok &= assert_eq(
+        "lint stdout has smart_quote",
+        any(line.startswith("smart_quote:") for line in result.stdout.splitlines()),
+        True,
+    )
+    ok &= assert_eq(
+        "lint stdout has docxtpl_prefix",
+        any(line.startswith("docxtpl_prefix:") for line in result.stdout.splitlines()),
+        True,
+    )
+    ok &= assert_eq(
+        "lint stdout has undefined_callable",
+        any(line.startswith("undefined_callable:") for line in result.stdout.splitlines()),
+        True,
+    )
+
+    return ok
+
+
 def main():
     results = []
     results.append(("type_inference", test_type_inference()))
     results.append(("config_merge", test_config_merge()))
+    results.append(("word_artifacts", test_word_artifacts()))
+    results.append(("lint_flag", test_lint_flag()))
 
     print(f"\n{'='*60}")
     print("SUMMARY")

@@ -44,8 +44,19 @@ After a fresh analysis (not a cache hit), load `manifest.yaml` and check for iss
 3. **Conditional variables shadowing unconditional** — if the same variable name appears in both `variables` and a conditional's `if_variables`/`else_variables`, flag it. The script deduplicates these, but a config.yaml merge could reintroduce duplicates.
 4. **Loop sub-variables with no names** — if a loop's `variables` list is empty, the loop collects nothing. This may be intentional (iteration-only) or a sign the template uses a non-standard loop variable pattern.
 5. **Config.yaml drift** — if `config.yaml` exists, quickly scan it for variable names that don't appear anywhere in the manifest. These are config entries for variables the template no longer uses. Warn so the developer can clean up.
+6. **Sanitize/lint warnings** — if `manifest.warnings` is present and non-empty, surface each entry to the Orchestrator. These are author-actionable issues the script auto-corrected during analysis: smart quotes inside tag bodies (Word autocorrect), unrecognized docxtpl prefixes (`{%p`/`{%tr`/`{%tc`) that were stripped for analysis only, and undefined Jinja callables that will fail at render time. Each warning is a string formatted as `"<code>: <detail>"` (codes: `smart_quote`, `docxtpl_prefix`, `undefined_callable`).
 
 Report any warnings alongside the manifest contents when returning to the Orchestrator.
+
+### Lint-only mode
+
+If the Orchestrator wants warnings without writing a manifest, invoke:
+
+```bash
+python <script_path> <template_dir> --lint
+```
+
+This runs extract → sanitize → callable-detect, prints warnings to stdout, and exits non-zero if any are found. No `manifest.yaml` is written.
 
 ## Step 3 — Return to Orchestrator
 
